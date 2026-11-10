@@ -6,8 +6,14 @@ Offline engineering calculators for plant engineers, one Android app per discipl
 ```
 packages/plant_core/       shared template: units, tool model, screens, test harness
 apps/instrument_toolkit/   LoopCal – Instrument Toolkit (com.homilabs.loopcal)
+apps/lab_toolkit/          TitraLab – Lab Toolkit (com.homilabs.titralab)
+apps/hse_toolkit/          SafeShift – HSE Toolkit (com.homilabs.safeshift)
+apps/process_toolkit/      FlowSheet – Process Toolkit (com.homilabs.flowsheet)
+apps/electrical_toolkit/   VoltWise – Electrical Toolkit (com.homilabs.voltwise)
+apps/mechanical_toolkit/   TorqueMate – Mechanical Toolkit (com.homilabs.torquemate)
+apps/civil_toolkit/        BeamBook – Civil Toolkit (com.homilabs.beambook)
 docs/                      scope locks and research notes per app
-tool/                      release_check.sh, coefficient generators
+tool/                      release_check.sh, coefficient and icon generators
 ```
 
 ## Adding a tool

@@ -8,10 +8,19 @@ import 'units.dart';
 
 /// Values entered by the user, already converted to base units.
 class ToolValues {
-  ToolValues(this.numbers, this.choices);
+  ToolValues(this.numbers, this.choices, [this.lists = const {}]);
 
   final Map<String, double> numbers;
   final Map<String, String> choices;
+
+  /// Lists of numbers (data sets, stations, loads), in base units.
+  final Map<String, List<double>> lists;
+
+  List<double> l(String id) {
+    final v = lists[id];
+    if (v == null) throw ToolInputError('Missing list: $id');
+    return v;
+  }
 
   double n(String id) {
     final v = numbers[id];
@@ -47,9 +56,14 @@ class NumberInput extends ToolInput {
     super.help,
     super.visibleWhen,
     this.unitSuffix,
+    this.units,
   });
 
   final Quantity quantity;
+
+  /// (metric, imperial) unit ids shown by default, overriding the
+  /// quantity-wide defaults (e.g. mL for a burette reading).
+  final (String, String)? units;
 
   /// Initial value in base units.
   final double initial;
@@ -61,6 +75,36 @@ class NumberInput extends ToolInput {
 
   /// Extra text after the unit, e.g. "abs" or "g".
   final String? unitSuffix;
+}
+
+/// A list of numbers typed into one field, separated by spaces, commas,
+/// semicolons or new lines (decimal point must be '.').
+class ListInput extends ToolInput {
+  const ListInput(
+    super.id,
+    super.label, {
+    required this.quantity,
+    required this.initial,
+    this.minCount = 1,
+    this.maxCount,
+    this.min,
+    this.max,
+    super.help,
+    super.visibleWhen,
+    this.units,
+  });
+
+  final Quantity quantity;
+
+  /// Initial values in base units.
+  final List<double> initial;
+  final int minCount;
+  final int? maxCount;
+
+  /// Allowed range for every value, in base units.
+  final double? min;
+  final double? max;
+  final (String, String)? units;
 }
 
 class ChoiceOption {
@@ -96,6 +140,7 @@ class ToolOutput {
     this.fixedUnit,
     this.sig = 5,
     this.text,
+    this.units,
   });
 
   /// Text-only output (status lines, verdicts).
@@ -107,7 +152,8 @@ class ToolOutput {
   }) : value = double.nan,
        quantity = Quantity.dimensionless,
        fixedUnit = null,
-       sig = 5;
+       sig = 5,
+       units = null;
 
   final String id;
   final String label;
@@ -121,6 +167,9 @@ class ToolOutput {
   final String? fixedUnit;
   final int sig;
   final String? text;
+
+  /// (metric, imperial) default display units; see [NumberInput.units].
+  final (String, String)? units;
 }
 
 class ToolResult {
@@ -161,6 +210,7 @@ class ToolCase {
     required this.source,
     this.numbers = const {},
     this.choices = const {},
+    this.lists = const {},
     this.expect = const {},
     this.expectText = const {},
     this.relTol = 1e-3,
@@ -175,6 +225,9 @@ class ToolCase {
   final String source;
   final Map<String, (double, String)> numbers;
   final Map<String, String> choices;
+
+  /// List inputs as `{id: ([values], unitId)}`.
+  final Map<String, (List<double>, String)> lists;
   final Map<String, (double, String)> expect;
   final Map<String, String> expectText;
   final double relTol;
@@ -216,6 +269,7 @@ class ToolDef {
   ToolValues initialValues() => ToolValues(
     {for (final i in inputs.whereType<NumberInput>()) i.id: i.initial},
     {for (final i in inputs.whereType<ChoiceInput>()) i.id: i.initial},
+    {for (final i in inputs.whereType<ListInput>()) i.id: i.initial},
   );
 
   /// Range checks for visible inputs; returns error text per input id.
@@ -232,6 +286,21 @@ class ToolDef {
         errors[i.id] = i.minInclusive ? 'Must be ≥ min' : 'Must be > min';
       } else if (i.max != null && x > i.max!) {
         errors[i.id] = 'Too large';
+      }
+    }
+    for (final i in inputs.whereType<ListInput>()) {
+      if (!i.isVisible(v)) continue;
+      final xs = v.lists[i.id];
+      if (xs == null || xs.any((x) => x.isNaN)) {
+        errors[i.id] = 'Numbers only, separated by spaces or commas';
+      } else if (xs.length < i.minCount) {
+        errors[i.id] = 'Enter at least ${i.minCount} values';
+      } else if (i.maxCount != null && xs.length > i.maxCount!) {
+        errors[i.id] = 'At most ${i.maxCount} values';
+      } else if (i.min != null && xs.any((x) => x < i.min!)) {
+        errors[i.id] = 'A value is below the minimum';
+      } else if (i.max != null && xs.any((x) => x > i.max!)) {
+        errors[i.id] = 'A value is too large';
       }
     }
     return errors;
@@ -253,6 +322,36 @@ List<CaseOutcome> verifyTool(ToolDef tool) {
   final out = <CaseOutcome>[];
   for (final tc in tool.cases) {
     final f = <String>[];
+    // Units.byId falls back to the first unit; a typo in a case must fail.
+    void checkUnit(Quantity q, String id, String where) {
+      if (!Units.of(q).any((u) => u.id == id)) {
+        f.add('$where: unknown unit "$id" for ${q.name}');
+      }
+    }
+
+    for (final i in tool.inputs) {
+      switch (i) {
+        case NumberInput():
+          final given = tc.numbers[i.id];
+          if (given != null) checkUnit(i.quantity, given.$2, i.id);
+          if (i.units != null) {
+            checkUnit(i.quantity, i.units!.$1, '${i.id} default');
+            checkUnit(i.quantity, i.units!.$2, '${i.id} default');
+          }
+        case ListInput():
+          final given = tc.lists[i.id];
+          if (given != null) checkUnit(i.quantity, given.$2, i.id);
+          if (i.units != null) {
+            checkUnit(i.quantity, i.units!.$1, '${i.id} default');
+            checkUnit(i.quantity, i.units!.$2, '${i.id} default');
+          }
+        case ChoiceInput():
+          final given = tc.choices[i.id];
+          if (given != null && !i.options.any((o) => o.value == given)) {
+            f.add('${i.id}: unknown option "$given"');
+          }
+      }
+    }
     final base = tool.initialValues();
     final numbers = Map<String, double>.of(base.numbers);
     final choices = Map<String, String>.of(base.choices);
@@ -273,7 +372,17 @@ List<CaseOutcome> verifyTool(ToolDef tool) {
       }
       numbers[k] = Units.byId(input.first.quantity, v.$2).toBase(v.$1);
     });
-    final values = ToolValues(numbers, choices);
+    final lists = Map<String, List<double>>.of(base.lists);
+    tc.lists.forEach((k, v) {
+      final input = tool.inputs.whereType<ListInput>().where((i) => i.id == k);
+      if (input.isEmpty) {
+        f.add('unknown list input $k');
+        return;
+      }
+      final u = Units.byId(input.first.quantity, v.$2);
+      lists[k] = [for (final x in v.$1) u.toBase(x)];
+    });
+    final values = ToolValues(numbers, choices, lists);
     try {
       final errors = tool.validate(values);
       if (errors.isNotEmpty) f.add('validation: $errors');
@@ -283,6 +392,14 @@ List<CaseOutcome> verifyTool(ToolDef tool) {
         if (o == null) {
           f.add('missing output $k');
           return;
+        }
+        checkUnit(o.quantity, e.$2, 'expect $k');
+        if (o.units != null) {
+          checkUnit(o.quantity, o.units!.$1, '$k default');
+          checkUnit(o.quantity, o.units!.$2, '$k default');
+        }
+        if (o.fixedUnit != null) {
+          checkUnit(o.quantity, o.fixedUnit!, '$k fixed');
         }
         final got = Units.byId(o.quantity, e.$2).fromBase(o.value);
         final tol = tc.absTol > 0 ? tc.absTol : (e.$1.abs() * tc.relTol);

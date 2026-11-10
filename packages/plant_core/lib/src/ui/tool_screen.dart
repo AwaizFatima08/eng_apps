@@ -35,16 +35,35 @@ class _ToolScreenState extends State<ToolScreen> {
     for (final i in tool.inputs) {
       switch (i) {
         case NumberInput():
-          final u = Units.defaultFor(i.quantity, system);
+          final u = Units.preferred(i.quantity, system, i.units);
           _inputUnits[i.id] = u.id;
           final base = current.numbers[i.id] ?? i.initial;
           final text = base.isNaN ? '' : formatNumber(u.fromBase(base), sig: 6);
           (_controllers[i.id] ??= TextEditingController()).text = text;
         case ChoiceInput():
           _choices[i.id] = current.choices[i.id] ?? i.initial;
+        case ListInput():
+          final u = Units.preferred(i.quantity, system, i.units);
+          _inputUnits[i.id] = u.id;
+          final base = current.lists[i.id] ?? i.initial;
+          (_controllers[i.id] ??= TextEditingController()).text = _listText(
+            base,
+            u,
+          );
       }
     }
   }
+
+  String _listText(List<double> base, Unit u) => base.any((x) => x.isNaN)
+      ? ''
+      : base.map((x) => formatNumber(u.fromBase(x), sig: 6)).join(', ');
+
+  /// Splits on spaces, commas, semicolons and new lines; '.' is the decimal
+  /// point. An unparsable item yields NaN so validation flags the field.
+  List<double> _parseList(String s) => [
+    for (final t in s.split(RegExp(r'[\s,;]+')))
+      if (t.isNotEmpty) double.tryParse(t) ?? double.nan,
+  ];
 
   @override
   void dispose() {
@@ -66,7 +85,14 @@ class _ToolScreenState extends State<ToolScreen> {
           ? double.nan
           : Units.byId(i.quantity, _inputUnits[i.id]!).toBase(raw);
     }
-    return ToolValues(numbers, Map.of(_choices));
+    final lists = <String, List<double>>{};
+    for (final i in tool.inputs.whereType<ListInput>()) {
+      final u = Units.byId(i.quantity, _inputUnits[i.id]!);
+      lists[i.id] = [
+        for (final x in _parseList(_controllers[i.id]?.text ?? '')) u.toBase(x),
+      ];
+    }
+    return ToolValues(numbers, Map.of(_choices), lists);
   }
 
   void _loadCase(ToolCase c) {
@@ -89,6 +115,20 @@ class _ToolScreenState extends State<ToolScreen> {
           );
         }
       }
+      for (final i in tool.inputs.whereType<ListInput>()) {
+        final given = c.lists[i.id];
+        if (given != null) {
+          _inputUnits[i.id] = Units.byId(i.quantity, given.$2).id;
+          _controllers[i.id]!.text = given.$1
+              .map((x) => formatNumber(x, sig: 8))
+              .join(', ');
+        } else {
+          _controllers[i.id]!.text = _listText(
+            i.initial,
+            Units.byId(i.quantity, _inputUnits[i.id]!),
+          );
+        }
+      }
       c.expect.forEach((k, v) => _outputUnits[k] = v.$2);
     });
     _scroll.animateTo(
@@ -107,7 +147,7 @@ class _ToolScreenState extends State<ToolScreen> {
   String _outputUnitId(ToolOutput o) =>
       o.fixedUnit ??
       _outputUnits[o.id] ??
-      Units.defaultFor(o.quantity, _system!).id;
+      Units.preferred(o.quantity, _system!, o.units).id;
 
   String _formatOutput(ToolOutput o) {
     if (o.text != null) return o.text!;
@@ -131,6 +171,9 @@ class _ToolScreenState extends State<ToolScreen> {
             orElse: () => i.options.first,
           );
           b.writeln('${i.label}: ${o.label}');
+        case ListInput():
+          final u = Units.byId(i.quantity, _inputUnits[i.id]!);
+          b.writeln('${i.label}: ${_controllers[i.id]!.text} ${u.symbol}');
       }
     }
     b.writeln('—');
@@ -205,6 +248,7 @@ class _ToolScreenState extends State<ToolScreen> {
                       child: switch (i) {
                         NumberInput() => _numberField(i, errors[i.id]),
                         ChoiceInput() => _choiceField(i),
+                        ListInput() => _listField(i, errors[i.id]),
                       },
                     ),
                 const SizedBox(height: 8),
@@ -334,6 +378,58 @@ class _ToolScreenState extends State<ToolScreen> {
                   : Padding(
                       padding: const EdgeInsets.only(right: 12),
                       child: Center(widthFactor: 1, child: Text(suffix)),
+                    )),
+      ),
+    );
+  }
+
+  Widget _listField(ListInput i, String? error) {
+    final units = Units.of(i.quantity);
+    final unit = Units.byId(i.quantity, _inputUnits[i.id]!);
+    final count = _parseList(_controllers[i.id]!.text).length;
+    return TextField(
+      key: ValueKey('in-${i.id}'),
+      controller: _controllers[i.id],
+      keyboardType: TextInputType.multiline,
+      minLines: 2,
+      maxLines: 6,
+      onChanged: (_) => setState(() {}),
+      decoration: InputDecoration(
+        labelText: i.label,
+        helperText: [
+          '$count value${count == 1 ? '' : 's'} · separate with spaces, commas or new lines',
+          ?i.help,
+        ].join('\n'),
+        helperMaxLines: 4,
+        errorText: error,
+        suffixIcon: units.length > 1
+            ? Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: unit.id,
+                    items: [
+                      for (final u in units)
+                        DropdownMenuItem(value: u.id, child: Text(u.symbol)),
+                    ],
+                    onChanged: (id) {
+                      if (id == null) return;
+                      setState(() {
+                        final xs = _parseList(_controllers[i.id]!.text);
+                        _controllers[i.id]!.text = _listText([
+                          for (final x in xs) unit.toBase(x),
+                        ], Units.byId(i.quantity, id));
+                        _inputUnits[i.id] = id;
+                      });
+                    },
+                  ),
+                ),
+              )
+            : (unit.symbol.isEmpty
+                  ? null
+                  : Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: Center(widthFactor: 1, child: Text(unit.symbol)),
                     )),
       ),
     );
