@@ -1,10 +1,13 @@
-# HomiLabs Plant Tools — proposed app names
+# HomiLabs Plant Tools — app names
+
+**Status:** LOCKED — approved by Homi 10 Nov 2026 (the Play/trademark search below is
+still done per app before its release).
 
 Family: **HomiLabs Plant Tools**. Each app keeps the plan's pattern as its subtitle
 ("*Discipline* Toolkit") and gets a short, memorable brand name for the launcher and
 store title, e.g. "LoopCal – Instrument Toolkit".
 
-| Cycle | Discipline | Proposed name | Store title | Package id | Why this name |
+| Cycle | Discipline | Name | Store title | Package id | Why this name |
 |---|---|---|---|---|---|
 | 1 | Instrument | **LoopCal** | LoopCal – Instrument Toolkit | `com.homilabs.loopcal` | "Loop" + "Cal(ibration/culator)" — what I&C techs do all day |
 | 2 | Lab | **TitraLab** | TitraLab – Lab Toolkit | `com.homilabs.titralab` | Titration is the lab's signature task |
