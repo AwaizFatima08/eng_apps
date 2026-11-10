@@ -211,7 +211,15 @@ class _ToolScreenState extends State<ToolScreen> {
     return Scaffold(
       bottomNavigationBar: result == null ? null : _keyResultBar(result),
       appBar: AppBar(
-        title: Text(tool.title),
+        // Long tool names wrap to two lines instead of being cut off at
+        // large font sizes.
+        toolbarHeight: kToolbarHeight + 12,
+        title: Text(
+          tool.title,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
         actions: [
           if (result != null)
             IconButton(
