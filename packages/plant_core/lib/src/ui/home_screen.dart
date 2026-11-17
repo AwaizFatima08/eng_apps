@@ -74,40 +74,25 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: tools.isEmpty
                   ? const Center(child: Text('No tool matches your search'))
-                  : ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                      itemCount: tools.length,
-                      itemBuilder: (context, i) {
-                        final t = tools[i];
-                        return Card(
-                          margin: const EdgeInsets.symmetric(vertical: 5),
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 6,
-                            ),
-                            leading: CircleAvatar(
-                              backgroundColor: scheme.primaryContainer,
-                              foregroundColor: scheme.onPrimaryContainer,
-                              child: Icon(t.icon),
-                            ),
-                            title: Text(
-                              t.title,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            subtitle: Text(
-                              t.summary,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => ToolScreen(tool: t),
-                              ),
+                  : LayoutBuilder(
+                      builder: (context, box) {
+                        // Two tiles per row on phones, more on tablets.
+                        final cols = (box.maxWidth / 280).floor().clamp(2, 4);
+                        final rows = (tools.length / cols).ceil();
+                        return ListView.builder(
+                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 24),
+                          itemCount: rows,
+                          itemBuilder: (context, r) => IntrinsicHeight(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                for (var c = 0; c < cols; c++)
+                                  Expanded(
+                                    child: r * cols + c < tools.length
+                                        ? _ToolTile(tool: tools[r * cols + c])
+                                        : const SizedBox.shrink(),
+                                  ),
+                              ],
                             ),
                           ),
                         );
@@ -115,6 +100,59 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// One tool on the home grid: icon, name and a short summary. Rows size to
+/// their tallest tile, so long names at large font sizes never get cut off.
+class _ToolTile extends StatelessWidget {
+  const _ToolTile({required this.tool});
+
+  final ToolDef tool;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final text = Theme.of(context).textTheme;
+    return Card(
+      margin: const EdgeInsets.all(4),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => ToolScreen(tool: tool)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: scheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(tool.icon, color: scheme.onPrimaryContainer),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                tool.title,
+                style: text.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                tool.summary,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: text.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+              ),
+            ],
+          ),
         ),
       ),
     );

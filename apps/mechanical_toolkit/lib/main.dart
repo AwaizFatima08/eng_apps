@@ -12,6 +12,7 @@ final appConfig = AppConfig(
   seedColor: const Color(0xFF455A64),
   tools: mechanicalTools,
   version: kAppVersion,
+  privacyUrl: 'https://tools.homilabs.org/privacy#torquemate',
   aboutText:
       'Everyday calculations for Mechanical and maintenance engineers: bolt torque, belt and gear drives, bearing life, shaft and key sizing, ISO fits, vibration severity and lubrication intervals. Every tool shows its formula, the '
       'standard it follows and worked examples you can load.',

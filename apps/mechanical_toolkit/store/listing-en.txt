@@ -1,0 +1,46 @@
+TorqueMate: Mechanical Toolkit
+---
+Bolt torque, bearing life, ISO fits and more for mechanical engineers. Offline.
+---
+TorqueMate puts seven everyday mechanical calculations in one simple app for plant, maintenance and design engineers. Every tool shows its formula, the standard it follows and worked examples you can load, so you can check how a result was reached.
+
+SEVEN TOOLS
+• Bolt torque & preload: tightening torque and preload for ISO metric coarse threads M6–M36, classes 8.8 / 10.9 / 12.9 and A2/A4-70/80 stainless, with the VDI 2230 friction method or a nut factor. Shows thread stress, yield utilisation and proof-load check.
+• Belt, pulley & gear ratio: speed ratio and driven speed for belt drives and gear pairs; open-belt length and centre distance, wrap angle, belt speed and shaft torques.
+• Bearing L10 life (ISO 281): basic rating life L10 and L10h, equivalent load, modified life with a reliability factor, and the C needed for a target life.
+• Shaft Ø & parallel key: solid shaft diameter for combined bending and torsion (ASME code or fatigue form), DIN 6885-1 key size and key length check.
+• ISO fits & tolerances (ISO 286): hole and shaft limits, clearance or interference and fit type for common hole-basis fits or any D–H/JS hole with c–s shaft, IT5–IT11, up to 500 mm.
+• Vibration severity (ISO 20816-3): zone A / B / C / D for industrial machines from 15 kW, with velocity unit conversion and alarm and trip guidance.
+• Regreasing interval: relubrication interval for grease-lubricated rolling bearings (speed factor, bearing type, load, temperature) and the grease quantity per refill.
+
+BUILT FOR THE PLANT
+• Metric and imperial units, switchable per field
+• Large, clear results with the key value pinned at the bottom of the screen
+• Copy inputs and results in one tap for reports and work orders
+• Light and dark theme, works well with large phone fonts
+
+PRIVATE AND OFFLINE
+No account, no ads, no analytics and no internet permission. The values you enter stay on your phone.
+
+VERIFIED
+Every tool is tested against worked examples from the standards, published tables or independent calculations, and the app was reviewed by practising mechanical engineers before release.
+
+IMPORTANT
+TorqueMate gives engineering estimates. Check results against the governing standard, the manufacturer's data and your plant's procedures before using them for design, assembly or safety decisions. HomiLabs is not affiliated with ISO, VDI, DIN or ASME.
+
+Part of HomiLabs Plant Tools. Made by HomiLabs.
+
+---
+Release notes (1.0.0):
+First release: seven mechanical engineering calculators with formulas, standards and worked examples. Works offline.
+---
+Play Console answers (17 Nov 2026):
+- Privacy policy: https://tools.homilabs.org/privacy#torquemate
+- App access: all functionality available without special access
+- Ads: no
+- Content rating: All Other App Types, all No
+- Target audience: 18+
+- Data safety: no data collected or shared
+- Government app: no; Financial features: none; Health: none
+- Advertising ID: not used
+- Category: Tools; contact homilabs.smc@gmail.com, website https://tools.homilabs.org/
