@@ -1,0 +1,42 @@
+BeamBook: Civil Toolkit
+---
+Beams, concrete mix, steel weights, footings and earthwork for civil engineers
+---
+BeamBook puts six everyday civil and site calculations in one simple app for site, structural and maintenance engineers. Every tool shows its formula, the standard or textbook it follows and worked examples you can load, so you can check how a result was reached.
+
+SIX TOOLS
+• Beam shear, moment & deflection: simply supported, cantilever, fixed-fixed or propped beams with a point load and/or UDL. Reactions, maximum shear and moment, and deflection against an L/n limit.
+• Concrete mix & quantity: cement bags, sand and aggregate (m³ and cft) and water for a nominal mix, from a slab, beam, column or pad, with wastage.
+• Steel section weight: mass per metre and total weight of rebar, round or square bar, plate, pipe and angles for a given length and count.
+• Footing / pad sizing: plan size of a square or rectangular pad from the allowable bearing pressure, including self and soil weight, with a moment and no-tension check.
+• Earthwork volume: cut or fill volume from cross-section areas at chainages by the average end area and prismoidal (Simpson) rules, with swell and shrinkage.
+• Paint & coating quantity: surface area of steel, pipe or a tank, then spreading rate, litres per coat and packs from volume solids and dry film thickness.
+
+BUILT FOR THE SITE
+• Metric and imperial units, switchable per field
+• Large, clear results with the key value pinned at the bottom of the screen
+• Copy inputs and results in one tap for reports and work orders
+• Light and dark theme, works well with large phone fonts
+
+PRIVATE AND OFFLINE
+No account and no sign-in. The calculators work without internet and the values you enter stay on your phone. BeamBook is free and shows one small banner ad on the home screen only, never on a calculator.
+
+IMPORTANT
+BeamBook gives engineering estimates. Structural members, footings and temporary works must be designed and approved by a qualified structural engineer under your local building code. HomiLabs is not affiliated with ACI, AISC, ASTM, BSI or ISO.
+
+Part of HomiLabs Plant Tools. Made by HomiLabs.
+
+---
+Release notes (1.0.0):
+First release: six civil engineering calculators with formulas, standards and worked examples. Works offline.
+---
+Play Console answers (18 Nov 2026):
+- Privacy policy: https://tools.homilabs.org/privacy#beambook
+- App access: all functionality available without special access
+- Ads: yes (AdMob banner on home screen)
+- Content rating: All Other App Types, all No
+- Target audience: 18+
+- Advertising ID: yes (advertising, analytics, fraud prevention)
+- Data safety: as VoltWise
+- Government app: no; Financial features: none; Health: none
+- Category: Tools; contact homilabs.smc@gmail.com, website https://tools.homilabs.org/

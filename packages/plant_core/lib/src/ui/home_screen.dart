@@ -27,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final tools = config.tools.where(_matches).toList();
     final scheme = Theme.of(context).colorScheme;
     return Scaffold(
+      bottomNavigationBar: config.homeBanner?.call(context),
       appBar: AppBar(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

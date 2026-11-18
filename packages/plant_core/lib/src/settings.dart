@@ -15,6 +15,9 @@ class AppConfig {
     required this.version,
     required this.aboutText,
     this.privacyUrl,
+    this.privacyNote,
+    this.homeBanner,
+    this.settingsExtras,
   });
 
   /// Launcher / store name, e.g. "LoopCal".
@@ -29,6 +32,17 @@ class AppConfig {
   final String version;
   final String aboutText;
   final String? privacyUrl;
+
+  /// Replaces the About screen's default "no ads, no data" privacy text
+  /// (apps with ads must describe them).
+  final String? privacyNote;
+
+  /// Optional footer on the home screen only (e.g. a banner ad). Never shown
+  /// on a tool screen.
+  final WidgetBuilder? homeBanner;
+
+  /// Optional extra rows at the end of Settings (e.g. "Ad choices").
+  final List<Widget> Function(BuildContext context)? settingsExtras;
 }
 
 /// User preferences, persisted with shared_preferences.

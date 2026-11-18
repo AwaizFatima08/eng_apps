@@ -1,0 +1,16 @@
+name: plant_ads
+description: Optional AdMob banner and UMP consent for HomiLabs Plant Tools apps that show ads.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.9.0
+  flutter: ">=3.35.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_mobile_ads: ^9.2.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0

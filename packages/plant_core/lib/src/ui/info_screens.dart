@@ -131,6 +131,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
             ],
           ),
+          ...?ConfigScope.of(context).settingsExtras?.call(context),
         ],
       ),
     );
@@ -161,9 +162,10 @@ class AboutScreen extends StatelessWidget {
           Text('Privacy', style: text.titleMedium),
           const SizedBox(height: 4),
           Text(
-            'The app works offline. It has no account, no ads and no analytics, '
-            'and it does not collect, store or share personal data. Your unit '
-            'and theme choices are stored only on this device.'
+            '${c.privacyNote ?? 'The app works offline. It has no account, no ads '
+                    'and no analytics, and it does not collect, store or share '
+                    'personal data. Your unit and theme choices are stored only '
+                    'on this device.'}'
             '${c.privacyUrl != null ? '\n\nPrivacy policy: ${c.privacyUrl}' : ''}',
             style: text.bodyMedium,
           ),

@@ -47,6 +47,8 @@ Finder get _vertical => find
 Future<void> _open(WidgetTester tester, String title) async {
   final finder = find.text(title);
   await tester.scrollUntilVisible(finder, 150, scrollable: _vertical);
+  await tester.ensureVisible(finder);
+  await tester.pumpAndSettle();
   await tester.tap(finder);
   await tester.pumpAndSettle();
 }

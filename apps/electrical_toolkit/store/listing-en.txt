@@ -1,0 +1,43 @@
+VoltWise: Electrical Toolkit
+---
+Cable sizing, motor current, transformer and solar calculators. Works offline.
+---
+VoltWise puts seven everyday electrical calculations in one simple app for plant, maintenance and site engineers and technicians. Every tool shows its formula, the standard it follows and worked examples you can load, so you can check how a result was reached.
+
+SEVEN TOOLS
+• Cable sizing & voltage drop: smallest IEC 60364-5-52 conductor that carries the design current after temperature, grouping and soil corrections and stays within the voltage-drop limit. Copper or aluminium, PVC or XLPE, installation methods C, E, D1 and D2.
+• Motor current & starter: full-load current of a 3-phase induction motor from kW, voltage, efficiency and power factor; direct-on-line and star-delta starting current; typical overload, breaker, fuse and contactor guidance.
+• Transformer current & fault level: full-load current on both sides, the kVA needed for a load, and the secondary short-circuit current from %Z.
+• Three-phase power: enter any two of P, Q, S, power factor and current to get the rest of the power triangle, with star and delta phase values.
+• Power-factor correction: capacitor kvar to reach a target power factor, capacitance per phase for star and delta banks, and the drop in line current and losses.
+• Earth rod resistance: a single driven rod and rods in a line, square or ring (BS 7430 and IEEE 142), compared with a target value.
+• Solar array & battery sizer: number of panels for a daily energy need, battery bank size for the days of autonomy (lithium or lead-acid) and inverter size, with sun hours for Pakistani cities.
+
+BUILT FOR THE PLANT
+• Metric and imperial units, switchable per field
+• Large, clear results with the key value pinned at the bottom of the screen
+• Copy inputs and results in one tap for reports and work orders
+• Light and dark theme, works well with large phone fonts
+
+PRIVATE AND OFFLINE
+No account and no sign-in. The calculators work without internet and the values you enter stay on your phone. VoltWise is free and shows one small banner ad on the home screen only, never on a calculator.
+
+IMPORTANT
+VoltWise gives engineering estimates. Check results against your wiring rules, the governing standard and the manufacturer's data before using them for design, purchase or safety decisions. Electrical work must be done by competent people. HomiLabs is not affiliated with IEC, IEEE or BSI.
+
+Part of HomiLabs Plant Tools. Made by HomiLabs.
+
+---
+Release notes (1.0.0):
+First release: seven electrical engineering calculators with formulas, standards and worked examples. Works offline.
+---
+Play Console answers (18 Nov 2026):
+- Privacy policy: https://tools.homilabs.org/privacy#voltwise
+- App access: all functionality available without special access
+- Ads: yes (AdMob banner on home screen)
+- Content rating: All Other App Types, all No
+- Target audience: 18+
+- Advertising ID: yes (advertising, analytics, fraud prevention)
+- Data safety: as Easy Ringtone/MedCal (approx location, app interactions, device IDs collected+shared for ads/analytics/fraud; crash logs+diagnostics collected for analytics; encrypted in transit; no account)
+- Government app: no; Financial features: none; Health: none
+- Category: Tools; contact homilabs.smc@gmail.com, website https://tools.homilabs.org/
